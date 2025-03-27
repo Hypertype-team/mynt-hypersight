@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -13,7 +14,6 @@ import {
 } from "./ticket-analysis/TicketFilterLogic";
 
 export const TicketAnalysisTable = () => {
-  {/* TODO-DEMO: Hardcoded for DEMO purposes. (7Feb25) */}
   const [selectedPeriod, setSelectedPeriod] = useState<string>("Jan 01 - Jan 31");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedTheme, setSelectedTheme] = useState<string>("");
@@ -22,7 +22,7 @@ export const TicketAnalysisTable = () => {
   const [expandedTickets, setExpandedTickets] = useState<string[]>([]);
   const { toast } = useToast();
 
-  const { data: ticketsData, isLoading, refetch } = useTicketData();
+  const { data, isLoading, refetch } = useTicketData();
 
   const handleRefresh = async () => {
     toast({
@@ -36,12 +36,16 @@ export const TicketAnalysisTable = () => {
     });
   };
 
-  if (isLoading) return <LoadingState />;
+  if (isLoading || !data) return <LoadingState />;
 
-  const allTickets = ticketsData?.tickets || [];
+  const allTickets = data.tickets;
   const totalTickets = allTickets.length;
 
-  const reportPeriods = [...new Set(allTickets?.map(ticket => ticket.report_period))];
+  // Ensure report_period exists before mapping
+  const reportPeriods = [...new Set(allTickets.map(ticket => 
+    ticket.report_period || ''
+  ).filter(period => period !== ''))];
+  
   const filteredTickets = getFilteredTickets(
     allTickets,
     selectedPeriod,
@@ -52,7 +56,9 @@ export const TicketAnalysisTable = () => {
   
   const categories = getCategoriesWithCounts(filteredTickets);
   const themes = getThemesWithCounts(filteredTickets, selectedCategory, sortAscending);
-  const departments = ["All", ...new Set(filteredTickets?.map(ticket => ticket.responsible_department))];
+  const departments = ["All", ...new Set(filteredTickets.map(ticket => 
+    ticket.responsible_department || ''
+  ).filter(dept => dept !== ''))];
   
   const groupedByIssue = groupTicketsByIssue(filteredTickets);
   const sortedIssues = Object.entries(groupedByIssue || {})

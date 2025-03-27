@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -55,8 +56,8 @@ export const useTicketData = () => {
       console.log(`Total tickets fetched: ${tickets.length}`);
       return { tickets, totalCount: tickets.length };
     },
-    // Configure caching to keep data in memory until explicitly invalidated
+    // Update cache configuration to match React Query v5 API
     staleTime: Infinity, // Data will never become stale automatically
-    cacheTime: Infinity, // Data will remain in cache indefinitely
+    gcTime: Infinity, // Replaced cacheTime with gcTime in React Query v5
   });
 };
