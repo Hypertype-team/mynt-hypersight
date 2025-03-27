@@ -55,5 +55,8 @@ export const useTicketData = () => {
       console.log(`Total tickets fetched: ${tickets.length}`);
       return { tickets, totalCount: tickets.length };
     },
+    // Configure caching to keep data in memory until explicitly invalidated
+    staleTime: Infinity, // Data will never become stale automatically
+    cacheTime: Infinity, // Data will remain in cache indefinitely
   });
 };

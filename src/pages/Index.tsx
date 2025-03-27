@@ -4,28 +4,12 @@ import { CategoryBreakdownChart } from "@/components/CategoryBreakdownChart";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [subcategoryFilter, setSubcategoryFilter] = useState("");
   const [commonIssueFilter, setCommonIssueFilter] = useState("");
-
-  const { data: dashboardData } = useQuery({
-    queryKey: ["dashboard-info"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("Mynt_Hypersight")
-        .select("*");
-      
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const totalTickets = dashboardData?.length || 0;
 
   return (
     <Layout>
