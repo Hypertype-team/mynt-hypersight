@@ -111,6 +111,24 @@ export type Database = {
         }
         Relationships: []
       }
+      mynt_chat_vectors: {
+        Row: {
+          embedding: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          embedding?: string | null
+          id: string
+          metadata?: Json | null
+        }
+        Update: {
+          embedding?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
       Mynt_Hypersight: {
         Row: {
           category: string | null
@@ -247,6 +265,17 @@ export type Database = {
         }[]
       }
       match_chat_vectors: {
+        Args: {
+          query_embedding: string
+          match_count?: number
+        }
+        Returns: {
+          id: string
+          metadata: Json
+          similarity: number
+        }[]
+      }
+      match_mynt_chat_vectors: {
         Args: {
           query_embedding: string
           match_count?: number
