@@ -46,6 +46,18 @@ export const TicketAnalysisTable = () => {
     .filter(period => period !== undefined && period !== null)
   )].sort();
 
+  // First filter by report period
+  const periodFilteredTickets = selectedPeriod === "_all" 
+    ? allTickets 
+    : allTickets.filter(ticket => ticket.report_period === selectedPeriod);
+
+  // Then get categories from period-filtered tickets
+  const categories = getCategoriesWithCounts(periodFilteredTickets);
+
+  // Then get themes from period-filtered tickets for the selected category
+  const themes = getThemesWithCounts(periodFilteredTickets, selectedCategory, sortAscending);
+
+  // Finally apply all filters for the final list
   const filteredTickets = getFilteredTickets(
     allTickets,
     selectedPeriod,
@@ -54,8 +66,6 @@ export const TicketAnalysisTable = () => {
     selectedDepartment
   );
   
-  const categories = getCategoriesWithCounts(filteredTickets);
-  const themes = getThemesWithCounts(filteredTickets, selectedCategory, sortAscending);
   const departments = ["All", ...new Set(filteredTickets.map(ticket => 
     ticket.responsible_department || ''
   ).filter(dept => dept !== ''))];

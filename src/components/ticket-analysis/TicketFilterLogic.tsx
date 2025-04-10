@@ -24,9 +24,9 @@ export const getFilteredTickets = (
   });
 };
 
-export const getCategoriesWithCounts = (filteredTickets: Ticket[]) => {
-  // Get all unique categories and their counts from the full dataset
-  const categoryMap = filteredTickets.reduce((acc, ticket) => {
+export const getCategoriesWithCounts = (tickets: Ticket[]) => {
+  // Get all unique categories and their counts from the filtered dataset
+  const categoryMap = tickets.reduce((acc, ticket) => {
     const category = ticket.category || "Uncategorized";
     acc[category] = (acc[category] || 0) + 1;
     return acc;
@@ -48,18 +48,20 @@ export const getCategoriesWithCounts = (filteredTickets: Ticket[]) => {
 };
 
 export const getThemesWithCounts = (
-  filteredTickets: Ticket[],
+  tickets: Ticket[],
   selectedCategory: string,
   sortAscending: boolean
 ) => {
   if (!selectedCategory) return [];
   
-  return [...new Set(filteredTickets?.filter(t => t.category === selectedCategory)
-    .map(ticket => ticket.subcategory))]
+  // Get themes for the selected category from the filtered dataset
+  const themesForCategory = tickets.filter(t => t.category === selectedCategory);
+  
+  return [...new Set(themesForCategory.map(ticket => ticket.subcategory))]
     .map(theme => ({
       name: theme || "",
-      count: filteredTickets?.filter(t => t.subcategory === theme).length || 0,
-      display: `${theme} (${filteredTickets?.filter(t => t.subcategory === theme).length || 0} tickets)`
+      count: themesForCategory.filter(t => t.subcategory === theme).length || 0,
+      display: `${theme} (${themesForCategory.filter(t => t.subcategory === theme).length || 0} tickets)`
     }))
     .sort((a, b) => sortAscending ? a.count - b.count : b.count - a.count);
 };
