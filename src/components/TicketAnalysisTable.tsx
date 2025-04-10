@@ -13,7 +13,7 @@ import {
 } from "./ticket-analysis/TicketFilterLogic";
 
 export const TicketAnalysisTable = () => {
-  const [selectedMonth, setSelectedMonth] = useState<string>("_all");
+  const [selectedPeriod, setSelectedPeriod] = useState<string>("_all");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedTheme, setSelectedTheme] = useState<string>("");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("All");
@@ -40,20 +40,19 @@ export const TicketAnalysisTable = () => {
   const allTickets = data.tickets;
   const totalTickets = allTickets.length;
 
-  // Debug logging
-  console.log('All tickets:', allTickets);
-  console.log('Unique report periods:', [...new Set(allTickets.map(t => t.report_period))]);
-  console.log('Selected month:', selectedMonth);
+  // Get unique report periods from the data
+  const reportPeriods = [...new Set(allTickets
+    .map(ticket => ticket.report_period)
+    .filter(period => period !== undefined && period !== null)
+  )].sort();
 
   const filteredTickets = getFilteredTickets(
     allTickets,
-    selectedMonth,
+    selectedPeriod,
     selectedCategory,
     selectedTheme,
     selectedDepartment
   );
-  
-  console.log('Filtered tickets count:', filteredTickets.length);
   
   const categories = getCategoriesWithCounts(filteredTickets);
   const themes = getThemesWithCounts(filteredTickets, selectedCategory, sortAscending);
@@ -71,8 +70,8 @@ export const TicketAnalysisTable = () => {
         <TicketFilters
           totalTickets={totalTickets}
           filteredCount={filteredTickets.length}
-          selectedPeriod={selectedMonth}
-          setSelectedPeriod={setSelectedMonth}
+          selectedPeriod={selectedPeriod}
+          setSelectedPeriod={setSelectedPeriod}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           selectedTheme={selectedTheme}
@@ -81,7 +80,7 @@ export const TicketAnalysisTable = () => {
           setSelectedDepartment={setSelectedDepartment}
           sortAscending={sortAscending}
           setSortAscending={setSortAscending}
-          reportPeriods={[]}
+          reportPeriods={reportPeriods}
           categories={categories}
           themes={themes}
           departments={departments}

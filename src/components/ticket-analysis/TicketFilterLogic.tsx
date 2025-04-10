@@ -8,17 +8,14 @@ const getMonthFromPeriod = (period: string | undefined): string => {
 
 export const getFilteredTickets = (
   tickets: Ticket[],
-  selectedMonth: string,
+  selectedPeriod: string,
   selectedCategory: string,
   selectedTheme: string,
   selectedDepartment: string
 ): Ticket[] => {
   return tickets?.filter(ticket => {
-    if (selectedMonth && selectedMonth !== "_all") {
-      const ticketMonth = getMonthFromPeriod(ticket.report_period);
-      if (!ticketMonth || ticketMonth !== selectedMonth) {
-        return false;
-      }
+    if (selectedPeriod && selectedPeriod !== "_all") {
+      if (ticket.report_period !== selectedPeriod) return false;
     }
     if (selectedCategory && ticket.category !== selectedCategory) return false;
     if (selectedTheme && ticket.subcategory !== selectedTheme) return false;
