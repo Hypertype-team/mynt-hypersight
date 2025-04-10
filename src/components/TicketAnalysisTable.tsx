@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -14,7 +13,7 @@ import {
 } from "./ticket-analysis/TicketFilterLogic";
 
 export const TicketAnalysisTable = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>("Jan 01 - Jan 31");
+  const [selectedMonth, setSelectedMonth] = useState<string>("_all");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedTheme, setSelectedTheme] = useState<string>("");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("All");
@@ -41,14 +40,9 @@ export const TicketAnalysisTable = () => {
   const allTickets = data.tickets;
   const totalTickets = allTickets.length;
 
-  // Ensure report_period exists before mapping
-  const reportPeriods = [...new Set(allTickets.map(ticket => 
-    ticket.report_period || ''
-  ).filter(period => period !== ''))];
-  
   const filteredTickets = getFilteredTickets(
     allTickets,
-    selectedPeriod,
+    selectedMonth,
     selectedCategory,
     selectedTheme,
     selectedDepartment
@@ -70,8 +64,8 @@ export const TicketAnalysisTable = () => {
         <TicketFilters
           totalTickets={totalTickets}
           filteredCount={filteredTickets.length}
-          selectedPeriod={selectedPeriod}
-          setSelectedPeriod={setSelectedPeriod}
+          selectedPeriod={selectedMonth}
+          setSelectedPeriod={setSelectedMonth}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           selectedTheme={selectedTheme}
@@ -80,7 +74,7 @@ export const TicketAnalysisTable = () => {
           setSelectedDepartment={setSelectedDepartment}
           sortAscending={sortAscending}
           setSortAscending={setSortAscending}
-          reportPeriods={reportPeriods}
+          reportPeriods={[]}
           categories={categories}
           themes={themes}
           departments={departments}

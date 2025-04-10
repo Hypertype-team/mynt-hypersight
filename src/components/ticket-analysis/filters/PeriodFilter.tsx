@@ -12,6 +12,11 @@ interface PeriodFilterProps {
   reportPeriods: string[];
 }
 
+const MONTHS = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
 export const PeriodFilter = ({
   selectedPeriod,
   setSelectedPeriod,
@@ -19,27 +24,23 @@ export const PeriodFilter = ({
 }: PeriodFilterProps) => {
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium block text-gray-700">Report Period</label>
+      <label className="text-sm font-medium block text-gray-700">Month</label>
       <Select 
         value={selectedPeriod} 
         onValueChange={setSelectedPeriod}
       >
         <SelectTrigger className="w-full bg-white border-gray-200 hover:border-purple-200 transition-colors">
-          <SelectValue placeholder="Select period" />
+          <SelectValue placeholder="Select month" />
         </SelectTrigger>
         <SelectContent>
-          {/* <SelectItem value="_all" className="hover:bg-purple-50">
-            All periods
-          </SelectItem> */}
-          {/* TODO-DEMO: Hardcoded for DEMO purposes. (7Feb25) */}
-          <SelectItem key={'Jan 01 - Jan 31'} value={'Jan 01 - Jan 31'} className="hover:bg-purple-50">
-            {'Jan 01 - Jan 31'}
+          <SelectItem value="_all" className="hover:bg-purple-50">
+            All months
           </SelectItem>
-          {/* {reportPeriods.map(period => (
-            <SelectItem key={period} value={period} className="hover:bg-purple-50">
-              {period}
+          {MONTHS.map(month => (
+            <SelectItem key={month} value={month} className="hover:bg-purple-50">
+              {month}
             </SelectItem>
-          ))} */}
+          ))}
         </SelectContent>
       </Select>
     </div>
