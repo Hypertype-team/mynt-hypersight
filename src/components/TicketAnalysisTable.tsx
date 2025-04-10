@@ -40,6 +40,11 @@ export const TicketAnalysisTable = () => {
   const allTickets = data.tickets;
   const totalTickets = allTickets.length;
 
+  // Debug logging
+  console.log('All tickets:', allTickets);
+  console.log('Unique report periods:', [...new Set(allTickets.map(t => t.report_period))]);
+  console.log('Selected month:', selectedMonth);
+
   const filteredTickets = getFilteredTickets(
     allTickets,
     selectedMonth,
@@ -47,6 +52,8 @@ export const TicketAnalysisTable = () => {
     selectedTheme,
     selectedDepartment
   );
+  
+  console.log('Filtered tickets count:', filteredTickets.length);
   
   const categories = getCategoriesWithCounts(filteredTickets);
   const themes = getThemesWithCounts(filteredTickets, selectedCategory, sortAscending);

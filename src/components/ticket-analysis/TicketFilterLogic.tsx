@@ -1,6 +1,7 @@
 import { Ticket, TicketGroups } from "@/types/ticket";
 
-const getMonthFromPeriod = (period: string): string => {
+const getMonthFromPeriod = (period: string | undefined): string => {
+  if (!period) return '';
   // Extract month from "Jan 01 - Jan 31"
   return period.split(' ')[0];
 };
@@ -14,8 +15,10 @@ export const getFilteredTickets = (
 ): Ticket[] => {
   return tickets?.filter(ticket => {
     if (selectedMonth && selectedMonth !== "_all") {
-      const ticketMonth = getMonthFromPeriod(ticket.report_period || '');
-      if (ticketMonth !== selectedMonth) return false;
+      const ticketMonth = getMonthFromPeriod(ticket.report_period);
+      if (!ticketMonth || ticketMonth !== selectedMonth) {
+        return false;
+      }
     }
     if (selectedCategory && ticket.category !== selectedCategory) return false;
     if (selectedTheme && ticket.subcategory !== selectedTheme) return false;
