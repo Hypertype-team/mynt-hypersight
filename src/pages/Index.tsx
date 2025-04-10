@@ -15,6 +15,9 @@ const Index = () => {
     <Layout>
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">HyperSight Dashboard</h1>
+        <p className="text-gray-600">
+          Welcome Mathilda, hope you're having a lovely day! Below you can find your latest HyperSight ticket report powered by our Hypertype AI :)
+        </p>
 
         <TicketAnalysisTable />
 
