@@ -14,9 +14,7 @@ export const getFilteredTickets = (
   selectedDepartment: string
 ): Ticket[] => {
   return tickets?.filter(ticket => {
-    if (selectedPeriod && selectedPeriod !== "_all") {
-      if (ticket.report_period !== selectedPeriod) return false;
-    }
+    if (selectedPeriod && ticket.report_period !== selectedPeriod) return false;
     if (selectedCategory && ticket.category !== selectedCategory) return false;
     if (selectedTheme && ticket.subcategory !== selectedTheme) return false;
     if (selectedDepartment !== "All" && ticket.responsible_department !== selectedDepartment) return false;

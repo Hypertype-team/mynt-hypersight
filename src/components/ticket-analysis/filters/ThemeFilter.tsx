@@ -25,17 +25,14 @@ export const ThemeFilter = ({
       <Select 
         value={selectedTheme} 
         onValueChange={setSelectedTheme}
-        disabled={!selectedCategory || selectedCategory === "_all"}
+        disabled={!selectedCategory}
       >
         <SelectTrigger className={`w-full bg-white border-gray-200 transition-colors ${
-          !selectedCategory || selectedCategory === "_all" ? 'opacity-50 cursor-not-allowed' : 'hover:border-purple-200'
+          !selectedCategory ? 'opacity-50 cursor-not-allowed' : 'hover:border-purple-200'
         }`}>
-          <SelectValue placeholder={!selectedCategory || selectedCategory === "_all" ? "Select a category first" : "Select theme"} />
+          <SelectValue placeholder={!selectedCategory ? "Select a category first" : "Select theme"} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="_all" className="hover:bg-purple-50">
-            All themes
-          </SelectItem>
           {themes.map(({ name, display }) => (
             <SelectItem key={name} value={name} className="hover:bg-purple-50">
               {display}
