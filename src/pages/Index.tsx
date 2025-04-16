@@ -14,10 +14,12 @@ const Index = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">HyperSight Dashboard</h1>
-        <p className="text-gray-600">
-          Welcome Mathilda, hope you're having a lovely day! Here is your HyperSight ticket analysis, tailored for you by Hypertype's AI tech 😊
-        </p>
+        <div className="flex flex-col items-center justify-center text-center">
+          <h1 className="text-2xl font-bold">HyperSight Dashboard</h1>
+          <p className="text-gray-600 mt-2">
+            Welcome Mathilda, hope you're having a lovely day! Here is your HyperSight ticket analysis, tailored for you by Hypertype's AI tech 😊
+          </p>
+        </div>
 
         <TicketAnalysisTable />
 
