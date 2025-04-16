@@ -13,7 +13,7 @@ import {
 } from "./ticket-analysis/TicketFilterLogic";
 
 export const TicketAnalysisTable = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>("_all");
+  const [selectedPeriod, setSelectedPeriod] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedTheme, setSelectedTheme] = useState<string>("");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("All");
@@ -40,16 +40,41 @@ export const TicketAnalysisTable = () => {
   const allTickets = data.tickets;
   const totalTickets = allTickets.length;
 
-  // Get unique report periods from the data
+  // Get unique report periods and sort them chronologically
   const reportPeriods = [...new Set(allTickets
     .map(ticket => ticket.report_period)
     .filter(period => period !== undefined && period !== null)
-  )].sort();
+  )].sort((a, b) => {
+    // Extract month and dates from period strings (e.g., "Jan 01 - Jan 31")
+    const [aStart] = a.split(' - ');
+    const [bStart] = b.split(' - ');
+    
+    // Create Date objects for comparison
+    const months = {
+      'Dec': 0, 'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5,
+      'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11
+    };
+    
+    const [aMonth, aDay] = aStart.split(' ');
+    const [bMonth, bDay] = bStart.split(' ');
+    
+    // Compare months first
+    const monthDiff = months[aMonth] - months[bMonth];
+    if (monthDiff !== 0) return monthDiff;
+    
+    // If months are the same, compare days
+    return parseInt(aDay) - parseInt(bDay);
+  });
 
-  // First filter by report period
-  const periodFilteredTickets = selectedPeriod === "_all" 
-    ? allTickets 
-    : allTickets.filter(ticket => ticket.report_period === selectedPeriod);
+  // Set the most recent period if none is selected
+  if (!selectedPeriod && reportPeriods.length > 0) {
+    setSelectedPeriod(reportPeriods[reportPeriods.length - 1]);
+  }
+
+  // Filter by report period
+  const periodFilteredTickets = allTickets.filter(ticket => 
+    ticket.report_period === selectedPeriod
+  );
 
   // Then get categories from period-filtered tickets
   const categories = getCategoriesWithCounts(periodFilteredTickets);
