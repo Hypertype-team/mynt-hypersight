@@ -76,7 +76,7 @@ const Index = () => {
             </div>
           </div>
           <p className="text-gray-600 mt-2">
-            Welcome {userName || "User"}, hope you're having a lovely day! Here is your HyperSight ticket analysis, tailored for you by Hypertype's AI tech 😊
+            Welcome {userName}, hope you're having a lovely day! Here is your HyperSight ticket analysis, tailored for you by Hypertype's AI tech 😊
           </p>
         </div>
 
