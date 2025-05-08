@@ -5,11 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -22,6 +26,7 @@ const Auth = () => {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setAuthError("");
 
     try {
       // Only allow specific credentials for sign in
@@ -31,6 +36,16 @@ const Auth = () => {
         (email === "linnea.samuelsson@mynt.se" &&
         password === "lisnneaSa12m")
       ) {
+        // Set token and also create Supabase session for proper authentication
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (error) {
+          throw new Error("Supabase authentication failed. Please try again.");
+        }
+        
         localStorage.setItem("authToken", "test-token");
         toast({
           title: "Welcome back!",
@@ -42,6 +57,7 @@ const Auth = () => {
       }
     } catch (error: any) {
       console.error("Auth error:", error);
+      setAuthError(error.message);
       toast({
         variant: "destructive",
         title: "Error",
@@ -59,6 +75,14 @@ const Auth = () => {
           <h2 className="text-2xl font-bold text-[#2D2D2D]">Welcome Back</h2>
           <p className="text-[#6B7280] mt-2">Sign in to your account</p>
         </div>
+
+        {authError && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Authentication Error</AlertTitle>
+            <AlertDescription>{authError}</AlertDescription>
+          </Alert>
+        )}
 
         <form onSubmit={handleAuth} className="space-y-6">
           <div className="space-y-2">
@@ -99,6 +123,12 @@ const Auth = () => {
             {isLoading ? "Loading..." : "Sign In"}
           </Button>
         </form>
+
+        <div className="mt-4 text-sm text-center text-gray-600">
+          <p>Test accounts:</p>
+          <p>mathilda@mynt.se / YIWxPlyjzBqoQUKFGFJ</p>
+          <p>linnea.samuelsson@mynt.se / lisnneaSa12m</p>
+        </div>
       </div>
     </div>
   );

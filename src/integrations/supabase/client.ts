@@ -8,6 +8,28 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: localStorage,
     persistSession: true,
-    autoRefreshToken: true
+    autoRefreshToken: true,
+    detectSessionInUrl: true, // Enables detecting and parsing auth params from URL
+    flowType: 'implicit' // For SPA applications
+  },
+  // Global error handler to log issues
+  global: {
+    fetch: (...args) => {
+      return fetch(...args).catch(error => {
+        console.error('Supabase fetch error:', error);
+        throw error;
+      });
+    }
   }
 });
+
+// Export a helper function to check if user is authenticated
+export const isAuthenticated = async () => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    return !!session;
+  } catch (error) {
+    console.error('Error checking authentication:', error);
+    return false;
+  }
+};

@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -11,6 +12,9 @@ import {
   getThemesWithCounts,
   groupTicketsByIssue 
 } from "./ticket-analysis/TicketFilterLogic";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const TicketAnalysisTable = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<string>("");
@@ -21,7 +25,7 @@ export const TicketAnalysisTable = () => {
   const [expandedTickets, setExpandedTickets] = useState<string[]>([]);
   const { toast } = useToast();
 
-  const { data, isLoading, refetch } = useTicketData();
+  const { data, isLoading, error, refetch } = useTicketData();
 
   const handleRefresh = async () => {
     toast({
@@ -35,7 +39,52 @@ export const TicketAnalysisTable = () => {
     });
   };
 
-  if (isLoading || !data) return <LoadingState />;
+  if (isLoading) return <LoadingState />;
+  
+  if (error) {
+    return (
+      <div className="space-y-6 max-w-[1200px] mx-auto">
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4 mr-2" />
+          <AlertTitle>Error fetching tickets</AlertTitle>
+          <AlertDescription>
+            {error.message || "There was a problem loading the ticket data. Please try again."}
+          </AlertDescription>
+          <Button 
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            className="mt-4"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Try Again
+          </Button>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!data || !data.tickets || data.tickets.length === 0) {
+    return (
+      <div className="space-y-6 max-w-[1200px] mx-auto">
+        <Alert className="mb-6">
+          <AlertTitle>No tickets found</AlertTitle>
+          <AlertDescription>
+            No ticket data is available at the moment. This might be due to filtering or data access permissions.
+          </AlertDescription>
+          <Button 
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            className="mt-4"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh Data
+          </Button>
+        </Alert>
+      </div>
+    );
+  }
 
   const allTickets = data.tickets;
   const totalTickets = allTickets.length;
