@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -25,8 +26,10 @@ const Auth = () => {
     try {
       // Only allow specific credentials for sign in
       if (
-        email === "mathilda@mynt.se" &&
-        password === "YIWxPlyjzBqoQUKFGFJ"
+        (email === "mathilda@mynt.se" &&
+        password === "YIWxPlyjzBqoQUKFGFJ") ||
+        (email === "linnea.samuelsson@mynt.se" &&
+        password === "lisnneaSa12m")
       ) {
         localStorage.setItem("authToken", "test-token");
         toast({
@@ -35,7 +38,7 @@ const Auth = () => {
         });
         navigate("/");
       } else {
-        throw new Error("Invalid credentials. Please use the provided test account.");
+        throw new Error("Invalid credentials. Please use one of the provided test accounts.");
       }
     } catch (error: any) {
       console.error("Auth error:", error);
