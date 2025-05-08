@@ -4,7 +4,7 @@ import { TicketAnalysisTable } from "@/components/TicketAnalysisTable";
 import { CategoryBreakdownChart } from "@/components/CategoryBreakdownChart";
 import { Button } from "@/components/ui/button";
 import { LogOut, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,8 +14,24 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [subcategoryFilter, setSubcategoryFilter] = useState("");
   const [commonIssueFilter, setCommonIssueFilter] = useState("");
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Get user information when component mounts
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Get the first part of the email (before @) as the user's name
+        const name = user.email?.split('@')[0] || "";
+        // Capitalize the first letter
+        const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+        setUserName(formattedName);
+      }
+    };
+    getUserInfo();
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -60,7 +76,7 @@ const Index = () => {
             </div>
           </div>
           <p className="text-gray-600 mt-2">
-            Welcome Mathilda, hope you're having a lovely day! Here is your HyperSight ticket analysis, tailored for you by Hypertype's AI tech 😊
+            Welcome {userName || "User"}, hope you're having a lovely day! Here is your HyperSight ticket analysis, tailored for you by Hypertype's AI tech 😊
           </p>
         </div>
 
