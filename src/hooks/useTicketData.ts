@@ -56,8 +56,7 @@ export const useTicketData = () => {
       console.log(`Total tickets fetched: ${tickets.length}`);
       return { tickets, totalCount: tickets.length };
     },
-    // Update cache configuration to match React Query v5 API
-    staleTime: Infinity, // Data will never become stale automatically
-    gcTime: Infinity, // Replaced cacheTime with gcTime in React Query v5
+    staleTime: Infinity, 
+    gcTime: Infinity,
   });
 };

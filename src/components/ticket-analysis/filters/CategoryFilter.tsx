@@ -1,3 +1,4 @@
+
 import {
   Select,
   SelectContent,
@@ -33,6 +34,13 @@ export const CategoryFilter = ({
           <SelectValue placeholder="Select category" />
         </SelectTrigger>
         <SelectContent className="bg-white">
+          <SelectItem 
+            key="all" 
+            value="" 
+            className="hover:bg-purple-50 cursor-pointer"
+          >
+            All Categories
+          </SelectItem>
           {categories.map(({ name, display }) => (
             <SelectItem 
               key={name} 
