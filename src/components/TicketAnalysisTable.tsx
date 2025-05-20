@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -14,7 +15,7 @@ import {
 
 export const TicketAnalysisTable = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all"); // Changed default to "all"
   const [selectedTheme, setSelectedTheme] = useState<string>("");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("All");
   const [sortAscending, setSortAscending] = useState(false);
@@ -80,13 +81,13 @@ export const TicketAnalysisTable = () => {
   const categories = getCategoriesWithCounts(periodFilteredTickets);
 
   // Then get themes from period-filtered tickets for the selected category
-  const themes = getThemesWithCounts(periodFilteredTickets, selectedCategory, sortAscending);
+  const themes = getThemesWithCounts(periodFilteredTickets, selectedCategory === "all" ? "" : selectedCategory, sortAscending);
 
   // Finally apply all filters for the final list
   const filteredTickets = getFilteredTickets(
     allTickets,
     selectedPeriod,
-    selectedCategory,
+    selectedCategory === "all" ? "" : selectedCategory,
     selectedTheme,
     selectedDepartment
   );

@@ -36,7 +36,7 @@ export const CategoryFilter = ({
         <SelectContent className="bg-white">
           <SelectItem 
             key="all" 
-            value="" 
+            value="all" 
             className="hover:bg-purple-50 cursor-pointer"
           >
             All Categories
